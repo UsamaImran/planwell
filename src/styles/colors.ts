@@ -1,0 +1,17 @@
+export const PRIMARY_BLUE = '#0052CC';
+export const BACKGROUND_PURPLE = '#DEE1F7';
+export const BACKGROUND_SKIN = '#FEE5DB';
+export const TITLE_SKIN = '#A24F2D';
+export const BACKGROUND_WHITE = '#F9F9FA';
+export const BACKGROUND_GREEN = '#E1F4E5';
+export const BACKGROUND_YELLOW = '#FEFAE0';
+export const LIGHT_GRAY = '#DEE1F7';
+export const TEXT_BLUE = '#2837A3';
+export const LIGHT_GREEN = '#C1EFCB';
+export const LIGHT_BLUE = '#A6CAFF';
+export const LIGHT_PINK = '#EEA0A0';
+export const PRIMARY_GREEN = '#4FBF67';
+export const PRIMARY_RED = '#E31515';
+export const TEXT_GRAY = '#8F92A1';
+export const LINK_COLOR = '#4854A9';
+export const RAIL_GRAY_TRAIL_COLOR = '#A9A9A9';
