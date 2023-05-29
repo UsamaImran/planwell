@@ -17,14 +17,14 @@ const InfoContainer = () => {
   );
 
   const Star = () => (
-    <Image src={'/assets/images/Star.svg'} width={30} height={30} alt='' />
+    <Image src={'/assets/images/Star1.svg'} width={34} height={34} alt='' />
   );
 
   const title = !isLastStep
     ? 'View Results'
     : 'Set Your Goals & View Your Results';
 
-  return (
+  return !isLastStep ? (
     <Container sx={{ ...infoContainer }}>
       {!isLastStep && (
         <Box
@@ -46,7 +46,7 @@ const InfoContainer = () => {
         />
       </Box>
     </Container>
-  );
+  ) : null;
 };
 
 export default InfoContainer;

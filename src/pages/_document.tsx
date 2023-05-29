@@ -22,7 +22,6 @@ export default function Document({ emotionStyleTags }: MyDocumentProps) {
   return (
     <Html lang='en' className={roboto.className}>
       <Head>
-        <title>Planwell</title>
         {emotionStyleTags}
         <meta name='description' content='PlanWell' />
         <meta name='viewport' content='width=device-width, initial-scale=1' />

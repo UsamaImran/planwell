@@ -1,6 +1,7 @@
+import { useFormSubmit } from '@/api/useFormSubmit';
 import { useFormContext } from '@/context/form/formContext';
+import { getTransformedRequest, scrollToDestination } from '@/utils/utils';
 import { Box } from '@mui/material';
-import { useRouter } from 'next/router';
 import Button from '../../button/Button';
 import { buttonContainerStyles } from '../styles';
 
@@ -9,32 +10,58 @@ const { backBtnStyles, nextBtnStyles, buttonContainer } = buttonContainerStyles;
 const ButtonContainer = () => {
   const {
     formValues,
-    currentFormStep,
+    currentFormStep: { disable },
     isFirstStep,
     isLastStep,
+    subscriber: { publish },
+    saveResult,
     setCurrentStep,
     setIsLoading,
-    resetFormValues,
   } = useFormContext();
 
-  const router = useRouter();
+  const { mutate } = useFormSubmit();
 
   const title = isLastStep ? 'View Results' : 'Next';
 
-  const nextClickHandler = () => {
-    if (!isLastStep) {
-      setCurrentStep((prev) => prev + 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+  function navigateToNextStep() {
+    scrollToDestination('form');
+    setCurrentStep((prev) => prev + 1);
+  }
+
+  async function handleFormSubmit() {
+    if (!formValues.finalStep.retirementGoals.state) {
+      scrollToDestination('form');
+      publish(true);
     } else {
+      setIsLoading(true);
       try {
-        console.log(formValues);
-        resetFormValues();
-        setIsLoading(true);
-        setTimeout(() => {
-          router.push('/results');
-          setIsLoading(false);
-        }, 3000);
-      } catch (err) {}
+        const transformedRequest = getTransformedRequest(formValues);
+
+        mutate(transformedRequest, {
+          onSuccess: (data) => {
+            saveResult(data);
+          },
+          onError: (error) => {
+            throw error;
+          },
+        });
+      } catch (err) {
+        console.log('error occurred => ', err);
+      }
+      setIsLoading(false);
+    }
+  }
+
+  const nextClickHandler = () => {
+    switch (isLastStep) {
+      case true:
+        handleFormSubmit();
+        break;
+      case false:
+        navigateToNextStep();
+        break;
+      default:
+        null;
     }
   };
 
@@ -52,7 +79,7 @@ const ButtonContainer = () => {
         </Button>
       )}
       <Button
-        disabled={currentFormStep.disable}
+        disabled={disable}
         sx={nextBtnStyles}
         displayNextIcon={!isLastStep}
         onClick={nextClickHandler}

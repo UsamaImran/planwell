@@ -5,6 +5,7 @@ import GoalStep from '@/components/stepForm/steps/GoalStep';
 import IncomeStep from '@/components/stepForm/steps/IncomeStep';
 import KidsDetailStep from '@/components/stepForm/steps/KidsDetailStep';
 import SavingStep from '@/components/stepForm/steps/SavingStep';
+import { getErrorIndicator, getObjectKeys } from '@/utils/utils';
 import { FormValues, IForm } from './types';
 
 export const getFormSteps = (formValues: FormValues) => {
@@ -69,21 +70,75 @@ const handleDisableButton = <T extends keyof FormValues>(
     case 'incomeStep':
       {
         let val = formValues['incomeStep'];
-        res = typeof val.incomeValue !== 'number' || val.incomeValue === 0;
+        const isMaxExceeded = val.incomeValue > 2000000;
+        res =
+          typeof val.incomeValue !== 'number' ||
+          val.incomeValue === 0 ||
+          isMaxExceeded;
       }
       break;
     case 'expenseStep':
       {
         let val = formValues['expenseStep'];
-        res = !val.customExpenseValue && !val.expenseType;
+
+        res =
+          val.expenseType && val.expenseType === 'custom'
+            ? !val.customExpenseValue
+            : !val.customExpenseValue && !val.expenseType;
+      }
+      break;
+
+    case 'savingStep':
+      {
+        let val = formValues['savingStep'];
+        const isMaxExceeded = getObjectKeys(val).some(
+          (item) => val[item] > 2000000
+        );
+        res = isMaxExceeded;
+      }
+      break;
+    case 'assetStep':
+      {
+        let val = formValues['assetStep'];
+        const isMaxExceeded = getObjectKeys(val).some(
+          (item) => val[item] > 50_000_000
+        );
+        res = isMaxExceeded;
+      }
+
+      break;
+    case 'kidsStep':
+      {
+        let val = formValues['kidsStep'];
+        res = val.some((kid) => kid.age > 18);
       }
       break;
     case 'finalStep':
       {
         let val = formValues['finalStep'];
+        let shouldDisableDueToAge = getErrorIndicator(
+          val.retirementGoals.currentAge,
+          18,
+          100
+        );
+
+        const isHomeBuyingSelected = formValues['goals'].includes('HOME');
+        const isRetirementPercentage =
+          val.retirementGoals.replaceRetirement === null;
+        const final = isHomeBuyingSelected
+          ? val.retirementGoals.currentAge > val.homeBuyingGoals.ageToBuy
+          : false;
+
+        const isFundingPercentage = val.kidsGoals.goals.some(
+          (goal) => !goal.fundingPercentage
+        );
+
         res =
-          !val.retirementGoals.state ||
-          val.homeBuyingGoals.ageToBuy < val.retirementGoals.currentAge;
+          shouldDisableDueToAge ||
+          val.retirementGoals.state === null ||
+          isRetirementPercentage ||
+          isFundingPercentage ||
+          final;
       }
       break;
     default:

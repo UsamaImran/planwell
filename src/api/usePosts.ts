@@ -1,7 +1,6 @@
 import { useMutation, useQuery } from 'react-query';
 import { useApi } from './Api';
 
-//waiting for backend to provide endpoints
 const POSTS_BASE_API_ENDPOINT = 'https://jsonplaceholder.typicode.com/posts';
 
 export const usePosts = () => {
@@ -25,6 +24,7 @@ export const useGetSinglePost = (id: string) => {
 
 export const useCreatePost = () => {
   const Api = useApi();
+
   return useMutation({
     mutationKey: 'create Post',
     mutationFn: (body: Record<string, unknown>) =>

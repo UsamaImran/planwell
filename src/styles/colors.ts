@@ -15,3 +15,6 @@ export const PRIMARY_RED = '#E31515';
 export const TEXT_GRAY = '#8F92A1';
 export const LINK_COLOR = '#4854A9';
 export const RAIL_GRAY_TRAIL_COLOR = '#A9A9A9';
+export const BACKGROUND_GRAY = '#C4C4C4';
+export const TEXT_BLACK = '#1D1F27';
+export const STEPPER_COLOR = '#2837A3';

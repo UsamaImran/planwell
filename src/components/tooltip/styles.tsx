@@ -10,7 +10,9 @@ export const styles = {
     backgroundColor: 'white',
     padding: '20px',
     [MEDIUM_AND_SMALL_SCREEN]: {
-      width: '100%',
+      width: '100vw',
+      position: 'absolute',
+      left: 1,
     },
   },
   popperSubContainer: {

@@ -1,11 +1,13 @@
 import { PropsWithChildren, useState } from 'react';
-import { Tooltip, Popper, Fade } from '@mui/material';
+import { Tooltip, Popper, Fade, TooltipProps } from '@mui/material';
 
 import PopperContainer from './PopperContainer';
 import TooltipImage from './TooltipImage';
 import { styles } from './styles';
 
 const { popperStyles } = styles;
+
+const placement: TooltipProps['placement'] = 'top-start';
 
 function MyToolTip({ children }: PropsWithChildren) {
   const [anchorEl, setAnchorEl] = useState<HTMLSpanElement | null>(null);
@@ -30,6 +32,7 @@ function MyToolTip({ children }: PropsWithChildren) {
         enterDelay={5000}
         leaveDelay={2000}
         onBlur={handlePopoverClose}
+        placement={placement}
       >
         <span onMouseEnter={handlePopoverOpen}>
           <TooltipImage width={30} height={30} />
@@ -40,7 +43,7 @@ function MyToolTip({ children }: PropsWithChildren) {
         id={id}
         open={open}
         anchorEl={anchorEl}
-        placement='right-end'
+        placement={placement}
         sx={popperStyles}
       >
         {({ ...TransitionProps }) => (

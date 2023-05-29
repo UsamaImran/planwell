@@ -1,10 +1,10 @@
 import Image from 'next/image';
 import React from 'react';
 
-interface IImage {
+type IImage = {
   height?: number;
   width?: number;
-}
+};
 
 function TooltipImage({ height, width }: IImage) {
   return (

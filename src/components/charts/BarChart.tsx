@@ -8,61 +8,72 @@ import {
   Tooltip,
   Legend,
   ChartData,
-  CoreChartOptions,
-  DatasetChartOptions,
-  ElementChartOptions,
-  PluginChartOptions,
-  ScaleChartOptions,
-  BarControllerChartOptions,
 } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Bar } from 'react-chartjs-2';
 import { _DeepPartialObject } from 'chart.js/dist/types/utils';
-import { BAR_CHART_OPTIONS } from './chartOptions';
+import { GET_BAR_CHART_OPTIONS } from './chartOptions';
+import { getBarChartParams, getMappedBarChartData } from './chartHelpers';
+import { useFormContext } from '@/context/form/formContext';
+import { KidsSummary } from '@/context/form/types';
+import annotationPlugin from 'chartjs-plugin-annotation';
 
 ChartJS.register(
   CategoryScale,
   LinearScale,
   BarElement,
+  annotationPlugin,
   Title,
   Tooltip,
   ChartDataLabels,
   Legend
 );
 
-export type BarChartOptions = _DeepPartialObject<
-  CoreChartOptions<'bar'> &
-    ElementChartOptions<'bar'> &
-    PluginChartOptions<'bar'> &
-    DatasetChartOptions<'bar'> &
-    ScaleChartOptions<'bar'> &
-    BarControllerChartOptions
->;
-
 const labels = ['Child 1', 'Child 2', 'Child 3', 'Child 4', 'Child 5'];
 
 export const data: ChartData<'bar'> = {
-  labels,
+  labels: [],
   datasets: [
     {
-      label: 'Additional Amount You Need to Save (Monthly)',
+      label: 'Amount you are currently saving (Monthly)',
+
       data: labels.map((_, index) => index + 83200),
       backgroundColor: '#4154DC',
       stack: 'Stack 0',
-      borderRadius: 30,
       barThickness: 50,
+      borderRadius: 20,
+      borderSkipped: 'middle',
     },
     {
-      label: 'Amount you are currently saving (Monthly)',
+      label: 'Additional Amount You Need to Save (Monthly)',
       data: labels.map((_, index) => index + 90980),
       backgroundColor: '#A9B2FA',
       stack: 'Stack 0',
       borderRadius: 20,
       barThickness: 50,
+      borderSkipped: 'middle',
     },
   ],
 };
 
 export function BarChart() {
-  return <Bar options={BAR_CHART_OPTIONS} data={data} />;
+  const {
+    result,
+    formValues: { kidsStep },
+  } = useFormContext();
+  const kidsData = result?.goal_summary.kids_summary as KidsSummary[];
+  const alreadySaved = kidsStep.map((i) => i.monthlyContribution);
+  const mappedData = getMappedBarChartData(data, kidsData, alreadySaved);
+
+  const optionsParams = getBarChartParams(mappedData.datasets, kidsData);
+
+  return (
+    <Bar
+      options={GET_BAR_CHART_OPTIONS(optionsParams)}
+      data={mappedData}
+      height={500}
+      redraw
+    />
+  );
 }
+2;

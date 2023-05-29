@@ -9,7 +9,7 @@ export default function Loader() {
         sx={{
           color: '#fff',
           zIndex: (theme) => theme.zIndex.drawer + 3,
-          height: '200vh',
+          height: '100%',
         }}
         open={true}
       >

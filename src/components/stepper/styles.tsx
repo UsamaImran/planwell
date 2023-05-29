@@ -1,4 +1,4 @@
-import { PRIMARY_BLUE } from '@/styles/colors';
+import { STEPPER_COLOR } from '@/styles/colors';
 import { IStyles } from '@/types/global';
 import { SxProps, Theme } from '@mui/material';
 
@@ -14,5 +14,5 @@ export const getStepperStyles = (
   currentStep: number,
   index: number
 ): SxProps<Theme> => ({
-  backgroundColor: currentStep >= index ? PRIMARY_BLUE : '#C0C0C0',
+  backgroundColor: currentStep >= index ? STEPPER_COLOR : '#C0C0C0',
 });

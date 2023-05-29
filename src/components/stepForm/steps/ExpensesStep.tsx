@@ -1,5 +1,6 @@
+import { EXPENSES_OPTIONS } from '@/constants/constants';
 import { useFormContext } from '@/context/form/formContext';
-import { LIGHT_BLUE, LIGHT_GREEN, LIGHT_PINK } from '@/styles/colors';
+import { convertCommaStringBackToNumber } from '@/utils/utils';
 import { Box, Radio, Typography } from '@mui/material';
 import React from 'react';
 import Container from '../../container/Container';
@@ -17,27 +18,6 @@ const {
   radioContainer,
 } = expensesStepStyles;
 
-const EXPENSES_OPTIONS = [
-  {
-    id: 1,
-    color: LIGHT_GREEN,
-    label: 'Super Saver:  Expenses are 50% of Income',
-    type: 'SUPER',
-  },
-  {
-    id: 2,
-    color: LIGHT_BLUE,
-    label: 'Average Saver:  Expenses are 75% of Income',
-    type: 'AVERAGE',
-  },
-  {
-    id: 3,
-    color: LIGHT_PINK,
-    label: 'Spender:  Expenses are 90% of Income',
-    type: 'SPENDER',
-  },
-];
-
 function ExpensesStep() {
   const {
     formValues: { expenseStep },
@@ -48,7 +28,7 @@ function ExpensesStep() {
 
   const handleValuesChange = <T extends keyof typeof expenseStep>(
     key: T,
-    value: boolean | number | number[] | string
+    value: boolean | number | number[] | string | null
   ) => {
     const val =
       typeof value !== 'string' ? (value as number) : (value as string);
@@ -99,21 +79,50 @@ function ExpensesStep() {
         <Box sx={customContainer}>
           <Typography>OR</Typography>
           <Box sx={inputContainer}>
-            <Typography>
-              Enter Custom Value
-              <Typography variant='subtitle2'>Expenses</Typography>
-            </Typography>
-            <Box>
-              <Input
-                label='Expenses'
-                placeholder='$0'
-                type='number'
-                value={customExpenseValue || 0}
-                onChange={(e) =>
-                  handleValuesChange('customExpenseValue', +e.target.value)
-                }
+            <Box sx={{ ...radioContainer, alignItems: 'flex-start' }}>
+              <Radio
+                id={'custom'}
+                checked={expenseType === 'custom'}
+                onChange={(e) => handleValuesChange('expenseType', 'custom')}
               />
+              <label htmlFor={'custom'}>
+                <Typography sx={{ marginTop: 0.7 }}>
+                  Enter Custom Value <br />
+                  <small
+                    style={{
+                      color: 'lightgray',
+                      paddingLeft: 10,
+                      fontSize: '15px',
+                    }}
+                  >
+                    Monthly Expenses
+                  </small>
+                </Typography>
+              </label>
             </Box>
+
+            <label htmlFor={'custom'}>
+              <Box
+                role={'button'}
+                onClick={() => handleValuesChange('expenseType', 'custom')}
+              >
+                <Input
+                  label='Expenses'
+                  type='text'
+                  sx={{ width: '250px' }}
+                  value={customExpenseValue?.toLocaleString() || ''}
+                  disabled={expenseType !== 'custom'}
+                  onChange={(e) => {
+                    const value = e.target.value;
+
+                    handleValuesChange(
+                      'customExpenseValue',
+                      convertCommaStringBackToNumber(value) || 0
+                    );
+                  }}
+                />
+              </Box>{' '}
+            </label>
           </Box>
         </Box>
       </Box>

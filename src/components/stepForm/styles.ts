@@ -1,5 +1,6 @@
 import { MEDIUM_AND_SMALL_SCREEN } from '@/constants/constants';
 import {
+  BACKGROUND_GRAY,
   BACKGROUND_GREEN,
   BACKGROUND_PURPLE,
   BACKGROUND_SKIN,
@@ -41,13 +42,14 @@ export const styles = {
   formStepContainer: {
     display: 'flex',
     justifyContent: 'center',
-    marginY: 10,
+    alignItems: 'center',
     width: '100%',
   },
 
   stateContainer: {
     display: 'flex',
     alignItems: 'center',
+
     [MEDIUM_AND_SMALL_SCREEN]: {
       flexDirection: 'column',
       width: '100%',
@@ -55,14 +57,17 @@ export const styles = {
       gap: 1.5,
     },
   },
-  formContainer: { [MEDIUM_AND_SMALL_SCREEN]: { width: '100%' } },
+
+  formContainer: {
+    [MEDIUM_AND_SMALL_SCREEN]: { width: '100%' },
+  },
   selectStyles: {
     marginLeft: 2,
     flex: 1,
     borderRadius: '13px',
     backgroundColor: 'white',
-    width: '233px',
-    padding: '4px',
+    width: '200px',
+    padding: '2px',
     border: `1px solid ${PRIMARY_BLUE}`,
 
     [MEDIUM_AND_SMALL_SCREEN]: {
@@ -71,7 +76,16 @@ export const styles = {
       marginLeft: 0,
     },
   },
-  cardWrapper: {},
+  inputContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    [MEDIUM_AND_SMALL_SCREEN]: {
+      flexDirection: 'column',
+    },
+  },
+  lastStepStyle: { display: 'flex', justifyContent: 'center' },
+  lastStepText: { color: TEXT_BLUE, fontSize: '23px' },
 } satisfies IStyles;
 
 export const goalStepStyles = {
@@ -136,6 +150,10 @@ export const expensesStepStyles = {
     gap: 10,
     marginTop: 6,
     justifyContent: 'center',
+    [MEDIUM_AND_SMALL_SCREEN]: {
+      flexDirection: 'column',
+      gap: 2,
+    },
   },
   radioContainer: {
     display: 'flex',
@@ -173,8 +191,17 @@ export const commonStyles = {
 } satisfies IStyles;
 
 export const retirementAdditionalInfoStyles = {
-  infoContainer: { width: 'auto', margin: '0' },
+  infoContainer: {
+    width: '100%',
+    marginX: '0 !important',
+  },
   tooltipContainer: { display: 'flex', flexDirection: 'column', gap: 3 },
+  boxContainer: {
+    display: 'flex',
+    gap: 3,
+    [MEDIUM_AND_SMALL_SCREEN]: { flexDirection: 'column' },
+  },
+  boxChild: { width: '50%', [MEDIUM_AND_SMALL_SCREEN]: { width: '100%' } },
 } satisfies IStyles;
 
 export const kidsGoalItemStyles = {
@@ -199,7 +226,8 @@ export const kidsGoalItemStyles = {
     display: 'flex',
     justifyContent: 'center',
     flexDirection: 'column',
-    gap: 2,
+    // backgroundColor: 'yellow',
+    // gap: 1,
     [MEDIUM_AND_SMALL_SCREEN]: {
       flexDirection: 'column',
       justifyContent: 'flex-start',
@@ -209,6 +237,7 @@ export const kidsGoalItemStyles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    marginBottom: '10px',
   },
   selectStyles: {
     borderRadius: '16px',
@@ -232,8 +261,8 @@ export const getRandomBackgroundColor = () => {
 
 export const buttonContainerStyles = {
   backBtnStyles: {
-    backgroundColor: 'gray',
-    '&:hover': { backgroundColor: 'darkgray' },
+    backgroundColor: BACKGROUND_GRAY,
+    '&:hover': { backgroundColor: BACKGROUND_GRAY },
     [MEDIUM_AND_SMALL_SCREEN]: { width: '80%' },
   },
   nextBtnStyles: {

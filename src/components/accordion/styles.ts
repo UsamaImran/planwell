@@ -12,6 +12,7 @@ export const styles = {
     textAlign: 'center',
     display: 'flex',
     justifyContent: 'center',
+    alignItems: 'center',
     width: '100%',
     color: 'gray',
   },

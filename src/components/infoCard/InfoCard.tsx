@@ -5,7 +5,7 @@ import { Box, BoxProps, Typography } from '@mui/material';
 import React from 'react';
 import { styles } from './styles';
 
-const { infoCardContainer, subContainer } = styles;
+const { infoCardContainer, subContainer, text } = styles;
 
 interface IInfoCard extends BoxProps {
   backgroundColor?: string;
@@ -30,6 +30,7 @@ function InfoCard({
               variant='h4'
               sx={{
                 color: darkenColor(backgroundColor, 40),
+                ...text,
               }}
             >
               {cardTitle}

@@ -1,10 +1,10 @@
 import Select from '@/components/select/Select';
 import { STATES_LIST } from '@/constants/constants';
 import { useFormContext } from '@/context/form/formContext';
-import { BACKGROUND_PURPLE, PRIMARY_BLUE } from '@/styles/colors';
+import { BACKGROUND_GREEN, PRIMARY_BLUE } from '@/styles/colors';
 import { Box, Typography } from '@mui/material';
 import Link from 'next/link';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Accordion from '../../accordion/Accordion';
 import Container from '../../container/Container';
 import InputContainer from '../../container/InputContainer';
@@ -17,79 +17,93 @@ import {
   styles,
 } from '../styles';
 
-const { stateContainer, selectStyles } = styles;
+const { stateContainer, selectStyles, inputContainer } = styles;
 const { tooltipHeading, tooltipSubHeading } = incomeStepStyles;
-const { infoContainer, tooltipContainer } = retirementAdditionalInfoStyles;
+const { infoContainer, tooltipContainer, boxContainer, boxChild } =
+  retirementAdditionalInfoStyles;
 const { tooltipHeading: heading } = commonStyles;
 
 function RetirementGoals() {
   const {
     formValues: { finalStep },
+    subscriber: { subscribe, publish },
     onFormValuesChange,
   } = useFormContext();
 
   const { retirementGoals } = finalStep;
   const { currentAge, replaceRetirement, state } = retirementGoals;
+  const [stateError, setStateError] = useState(false);
+
+  useEffect(() => {
+    subscribe((value) => setStateError(!state && value));
+  }, [state, subscribe]);
 
   const handleValueChange = <T extends keyof typeof retirementGoals>(
     key: T,
-    value: string | number
+    value: string | number | null
   ) => {
     onFormValuesChange('finalStep', {
       ...finalStep,
       retirementGoals: { ...retirementGoals, [key]: value },
     });
+    if (key === 'state' && !!value) {
+      publish(false);
+    }
   };
 
   return (
     <InputContainer
       title='Retirement Goals'
-      backgroundColor={BACKGROUND_PURPLE}
+      backgroundColor={BACKGROUND_GREEN}
       tooltip={<RetirementGoalsToolTip />}
       additionalInformation={<AdditionalInformation />}
+      containerStyles={{ paddingX: '0 !important', margin: '0 !important' }}
     >
-      <InputSlider
-        label='Current Age'
-        min={18}
-        max={100}
-        step={1}
-        type={'age'}
-        value={currentAge}
-        onChangeValue={(value) =>
-          handleValueChange('currentAge', value as number)
-        }
-      />
-      <Box sx={stateContainer}>
-        <Typography sx={{ width: '44%' }}>State you live in</Typography>
-        <Box sx={{ width: '56%' }} />
-        <Box>
-          <Select
-            size='small'
-            placeholder='US'
-            sx={selectStyles}
-            label=''
-            options={STATES_LIST}
-            value={state}
-            onSelectOption={(val) => handleValueChange('state', val)}
-          />
-          {!state && (
-            <Typography
-              variant='subtitle1'
-              color='red'
-              sx={{ textAlign: 'center' }}
-            >
-              Required
-            </Typography>
-          )}
+      {' '}
+      <Box sx={inputContainer}>
+        <InputSlider
+          label='Current Age'
+          min={18}
+          max={100}
+          step={1}
+          displaySlider={false}
+          type={'age'}
+          inputType='age'
+          value={currentAge}
+          onChangeValue={(value) =>
+            handleValueChange('currentAge', value as number)
+          }
+        />
+        <Box sx={stateContainer}>
+          <Typography>State you live in</Typography>
+          <Box>
+            <Select
+              size='small'
+              placeholder='US'
+              sx={selectStyles}
+              label=''
+              options={STATES_LIST}
+              value={state || '0'}
+              onSelectOption={(val) => handleValueChange('state', val)}
+              error={stateError}
+              displayRequired={stateError}
+            />
+          </Box>
         </Box>
       </Box>
       <InputSlider
         label='What % of your family expenses do you want to replace at retirement?'
         value={replaceRetirement}
         inputType={'percent'}
+        displaySlider={false}
+        inputProps={{
+          placeholder: '70',
+          error: !replaceRetirement,
+          errorMessage: 'required',
+        }}
         max={100}
         onChangeValue={(value) =>
-          handleValueChange('replaceRetirement', value as number)
+          handleValueChange('replaceRetirement', (value as number) || null)
         }
       />
       <Typography variant='subtitle1' color='GrayText'>
@@ -143,55 +157,63 @@ const AdditionalInformation = () => {
   return (
     <Accordion title='View / Edit Assumptions'>
       <Container sx={infoContainer} tooltip={<AdditionalInfoTooltip />}>
-        <Box sx={{ display: 'flex', gap: 3 }}>
-          <InputSlider
-            label='Target rate of return before retirement'
-            displaySlider={false}
-            value={targetReturnRateBefore!}
-            inputProps={{ sx: { width: '200px ' } }}
-            step={0.5}
-            inputType='percent'
-            onChangeValue={(value) =>
-              handleValuesChange('targetReturnRateBefore', value)
-            }
-          />
-          <InputSlider
-            label='Target rate of return during retirement'
-            displaySlider={false}
-            value={targetReturnRateDuring!}
-            step={0.5}
-            inputType='percent'
-            inputProps={{ sx: { width: '200px ' } }}
-            onChangeValue={(value) =>
-              handleValuesChange('targetReturnRateDuring', value)
-            }
-          />
-        </Box>
-        <Box sx={{ display: 'flex', gap: 3 }}>
-          <InputSlider
-            label='Wage Growth'
-            displaySlider={false}
-            value={wageGrowth}
-            step={0.5}
-            inputType='percent'
-            inputProps={{ sx: { width: '200px ' } }}
-            onChangeValue={(value) => handleValuesChange('wageGrowth', value)}
-          />
-          <InputSlider
-            label='Inflation'
-            displaySlider={false}
-            value={inflation}
-            step={0.5}
-            inputType='percent'
-            inputProps={{ sx: { width: '200px ' } }}
-            onChangeValue={(value) => handleValuesChange('inflation', value)}
-          />
-        </Box>
         <Box>
           <Typography variant='subtitle2'>
             We have provided default values above. You can input your own values
             as needed.
           </Typography>
+        </Box>
+        <Box sx={boxContainer}>
+          <Box sx={boxChild}>
+            <InputSlider
+              label='Target rate of return before retirement'
+              displaySlider={false}
+              value={targetReturnRateBefore!}
+              inputProps={{ sx: { width: '100px ' } }}
+              step={0.5}
+              inputType='percent'
+              onChangeValue={(value) =>
+                handleValuesChange('targetReturnRateBefore', value)
+              }
+            />
+          </Box>
+          <Box sx={boxChild}>
+            <InputSlider
+              label='Target rate of return during retirement'
+              displaySlider={false}
+              value={targetReturnRateDuring!}
+              step={0.5}
+              inputType='percent'
+              inputProps={{ sx: { width: '100px ' } }}
+              onChangeValue={(value) =>
+                handleValuesChange('targetReturnRateDuring', value)
+              }
+            />
+          </Box>
+        </Box>
+        <Box sx={boxContainer}>
+          <Box sx={boxChild}>
+            <InputSlider
+              label='Wage Growth'
+              displaySlider={false}
+              value={wageGrowth}
+              step={0.5}
+              inputType='percent'
+              inputProps={{ sx: { width: '100px ' } }}
+              onChangeValue={(value) => handleValuesChange('wageGrowth', value)}
+            />
+          </Box>
+          <Box sx={boxChild}>
+            <InputSlider
+              label='Inflation'
+              displaySlider={false}
+              value={inflation}
+              step={0.5}
+              inputType='percent'
+              inputProps={{ sx: { width: '100px ' } }}
+              onChangeValue={(value) => handleValuesChange('inflation', value)}
+            />
+          </Box>
         </Box>
         <Box>
           <Typography>Income Expected in Retirement (Annual)</Typography>

@@ -18,13 +18,13 @@ const CARDS_DATA = [
   {
     label: 'Kids College',
     id: 2,
-    imgSrc: '/assets/images/saving_type_2.svg',
+    imgSrc: '/assets/images/saving_type_3.svg',
     dataKey: 'COLLEGE',
   },
   {
     label: 'FIRE',
     id: 3,
-    imgSrc: '/assets/images/saving_type_3.svg',
+    imgSrc: '/assets/images/saving_type_2.svg',
     dataKey: 'FIRE',
   },
 ];

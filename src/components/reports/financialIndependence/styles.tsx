@@ -31,6 +31,7 @@ export const styles = {
     borderWidth: '1px',
     borderRight: '1px dotted gray',
     flex: 1,
+
     [MEDIUM_AND_SMALL_SCREEN]: {
       borderWidth: 0,
     },
@@ -38,9 +39,22 @@ export const styles = {
   childSection: {
     display: 'flex',
     flexDirection: 'column',
+    justifyContent: 'space-between',
+    height: '100%',
+    paddingBottom: 7,
     gap: 5,
     alignItems: 'center',
   },
   sectionTitle: { color: TEXT_GRAY },
   sectionDetail: { fontSize: '30px', color: TEXT_BLUE },
+  financialSuggestionContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    [MEDIUM_AND_SMALL_SCREEN]: {
+      flexDirection: 'column',
+      alignContent: 'start',
+      justifyContent: 'start',
+    },
+  },
 } satisfies IStyles;

@@ -6,7 +6,6 @@ import type { AppProps } from 'next/app';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 
-import CssBaseline from '@mui/material/CssBaseline';
 import MyThemeProvider from '@/context/theme/ThemeProvider';
 
 const queryClient = new QueryClient();
@@ -18,7 +17,6 @@ export default function App({ Component, pageProps }: AppProps) {
         <ApiProvider>
           <FormProvider>
             <MyThemeProvider>
-              <CssBaseline />
               <Layout>
                 <Component {...pageProps} />
                 <ReactQueryDevtools />

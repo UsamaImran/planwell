@@ -1,3 +1,4 @@
+import { getTransformedRequest } from '@/utils/utils';
 import React, { SetStateAction } from 'react';
 
 export interface IForm {
@@ -12,13 +13,58 @@ export interface IForm {
   isLastStep: boolean;
   formValues: FormValues;
   isLoading: boolean;
-  resetFormValues: () => void;
+  result: Result | null;
+  subscriber: {
+    publish: (message: boolean) => void;
+    subscribe: (event: (msg: boolean) => void) => () => boolean;
+  };
+  saveResult: (data: Result | null) => void;
+  resetForm: () => void;
   setIsLoading: React.Dispatch<SetStateAction<boolean>>;
   setCurrentStep: React.Dispatch<SetStateAction<number>>;
-  onFormValuesChange: <T extends keyof FormValues>(
+  onFormValuesChange: <T extends keyof FormValues, Y extends FormValues[T]>(
     key: T,
-    value: FormValues[T]
+    value: Y
   ) => void;
+}
+
+export type RequestBody = ReturnType<typeof getTransformedRequest>;
+
+export interface Result {
+  net_worth_by_age: { [key: string]: number };
+  goal_summary: GoalSummary;
+  [key: string]: any;
+}
+
+interface GoalSummary {
+  home_buying_summary: any;
+  kids_summary: KidsSummary[];
+  retirement_summary: RetirementSummary;
+}
+
+export interface KidsSummary extends YearlyContributions {
+  additional_contribution_needed: number;
+  contribution_already_making: number;
+  contribution_needed: number;
+  status: string;
+  goal_age: number;
+}
+
+export interface YearlyContributions {
+  yearly_contribution_needed: number;
+  current_yearly_contributions: number;
+  additional_yearly_contribution_needed: number;
+}
+
+interface RetirementSummary extends YearlyContributions {
+  earliest_retirement_age: number;
+  retirement_additional_contribution_needed: number;
+  retirement_contribution_already_making: number;
+  retirement_contribution_needed: number;
+  your_target_retirement_age: number;
+  retirement_status: string;
+  suggested_action: string;
+  goal_age: number;
 }
 
 export interface FormValues {
@@ -32,7 +78,7 @@ export interface FormValues {
 }
 
 export type Goal = 'HOME' | 'COLLEGE' | 'FIRE';
-export type ExpenseType = 'SUPER' | 'AVERAGE' | 'SPENDER';
+export type ExpenseType = 'super_saver' | 'moderate' | 'high' | 'custom';
 interface IncomeStep {
   incomeValue: number;
 }
@@ -50,8 +96,8 @@ interface AssetStep {
 }
 
 interface ExpenseStep {
-  expenseType: ExpenseType | null;
-  customExpenseValue: number;
+  expenseType?: ExpenseType | null;
+  customExpenseValue?: number | null;
 }
 
 interface KidsStep {
@@ -64,7 +110,7 @@ interface KidsStep {
 interface RetirementGoals {
   currentAge: number;
   state: string;
-  replaceRetirement: number;
+  replaceRetirement: number | null;
   assumptions: Partial<{
     targetReturnRateBefore: number;
     targetReturnRateDuring: number;
@@ -91,11 +137,7 @@ interface KidsGoals {
   goalType: 'COLLEGE' | 'CUSTOM';
   fundingPercentage: number;
   customValue: number;
-  collegeOptions: {
-    title: string;
-    type: 'PUBLIC_IN_STATE' | 'PUBLIC_OUT_STATE' | 'PRIVATE';
-    value: number;
-  };
+  collegeOptions: number;
 }
 
 interface FinalStep {
@@ -123,12 +165,12 @@ export const initialValues: FormValues = {
     investmentBalanceValue: 0,
     cashValue: 0,
   },
-  expenseStep: { customExpenseValue: 0, expenseType: null },
+  expenseStep: { customExpenseValue: null, expenseType: 'moderate' },
   kidsStep: [],
   finalStep: {
     retirementGoals: {
-      currentAge: 0,
-      replaceRetirement: 0,
+      currentAge: 30,
+      replaceRetirement: 70,
       state: '',
       assumptions: {
         inflation: 2.5,

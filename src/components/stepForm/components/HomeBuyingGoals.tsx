@@ -1,5 +1,5 @@
 import { useFormContext } from '@/context/form/formContext';
-import { BACKGROUND_SKIN } from '@/styles/colors';
+import { BACKGROUND_SKIN, PRIMARY_BLUE } from '@/styles/colors';
 import { addCommasToNumber } from '@/utils/utils';
 import { Box, Typography } from '@mui/material';
 import React, { useEffect } from 'react';
@@ -61,8 +61,6 @@ function HomeBuyingGoals() {
     return addCommasToNumber(`${downPayment}`);
   };
 
-  const isError = ageToBuy < retirementGoals.currentAge;
-
   return (
     <InputContainer
       title='Home Buying Goals'
@@ -70,13 +68,14 @@ function HomeBuyingGoals() {
       additionalInformation={<AdditionalInformation />}
     >
       <InputSlider
+        max={50_000_000}
         label='Home Budget'
         value={desiredHomePrice}
         onChangeValue={(value) =>
           handleValuesChange('desiredHomePrice', +value)
         }
       />
-      <Typography color='gray'>Downpayment Details</Typography>
+
       <InputSlider
         displayInput={false}
         inputType='percent'
@@ -84,7 +83,9 @@ function HomeBuyingGoals() {
         step={1}
         inputReplacement={
           <Box sx={downPaymentContainer}>
-            <Typography color='blue'>${getDownPaymentValue()}</Typography>
+            <Typography color={PRIMARY_BLUE}>
+              ${getDownPaymentValue()}
+            </Typography>
             <Typography variant='subtitle1' color={'gray'}>
               Downpayment Amount
             </Typography>
@@ -100,21 +101,11 @@ function HomeBuyingGoals() {
         label='Age at which you want to buy?'
         value={ageToBuy}
         type='age'
+        inputType='age'
         min={retirementGoals.currentAge}
         max={100}
         step={1}
         onChangeValue={(value) => handleValuesChange('ageToBuy', +value)}
-        errorMsg={
-          isError && (
-            <Typography
-              variant='subtitle1'
-              color='red'
-              sx={{ textAlign: 'right' }}
-            >
-              Cannot be less than current age
-            </Typography>
-          )
-        }
       />
 
       <InputSlider
@@ -181,7 +172,6 @@ const AdditionalInformation = () => {
           label='HOA/ Other fees/ month'
           displaySlider={false}
           value={hoaFeePerMonth}
-          inputType='percent'
           onChangeValue={(value) => handleValuesChange('hoaFeePerMonth', value)}
         />
       </Container>

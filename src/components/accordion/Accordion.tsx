@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { Accordion as MuiAccordion, AccordionProps } from '@mui/material';
+import {
+  Accordion as MuiAccordion,
+  AccordionProps,
+  SxProps,
+  Theme,
+} from '@mui/material';
 import AccordionSummary, {
   AccordionSummaryProps,
 } from '@mui/material/AccordionSummary';
@@ -15,6 +20,7 @@ const { accordionContainer, accordionTitle } = styles;
 interface IAccordion extends AccordionProps {
   summaryProps?: AccordionSummaryProps;
   detailsProps?: AccordionDetailsProps;
+  titleStyles?: SxProps<Theme>;
 }
 
 export default function Accordion({
@@ -22,33 +28,34 @@ export default function Accordion({
   summaryProps,
   detailsProps,
   title,
+  titleStyles = {},
   sx,
   ...props
 }: IAccordion) {
-  const [expanded, setIsExpanded] = React.useState(false);
+  const [expanded, setIsExpanded] = React.useState(
+    props.defaultExpanded || false
+  );
   return (
-    <div>
-      <MuiAccordion
-        {...props}
-        sx={accordionContainer}
-        onChange={(_, value) => setIsExpanded(value)}
+    <MuiAccordion
+      {...props}
+      sx={accordionContainer}
+      onChange={(_, value) => setIsExpanded(value)}
+    >
+      <AccordionSummary
+        {...summaryProps}
+        aria-controls='panel1a-content'
+        id='panel1a-header'
       >
-        <AccordionSummary
-          {...summaryProps}
-          aria-controls='panel1a-content'
-          id='panel1a-header'
-        >
-          <Typography sx={accordionTitle}>
-            {title} &nbsp;{' '}
-            <ExpandMoreIcon
-              sx={{
-                transform: `rotate(${expanded ? '180deg' : '0'})`,
-              }}
-            />
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails {...detailsProps}>{children}</AccordionDetails>
-      </MuiAccordion>
-    </div>
+        <Typography sx={{ ...accordionTitle, ...titleStyles }}>
+          {title} &nbsp;{' '}
+          <ExpandMoreIcon
+            sx={{
+              transform: `rotate(${expanded ? '180deg' : '0'})`,
+            }}
+          />
+        </Typography>
+      </AccordionSummary>
+      <AccordionDetails {...detailsProps}>{children}</AccordionDetails>
+    </MuiAccordion>
   );
 }

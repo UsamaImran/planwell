@@ -1,4 +1,5 @@
 import { MEDIUM_AND_SMALL_SCREEN } from '@/constants/constants';
+import { PRIMARY_BLUE } from '@/styles/colors';
 import { IStyles } from '@/types/global';
 
 export const styles = {
@@ -7,8 +8,6 @@ export const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
-    // marginY: '45px',
-
     gap: 3,
 
     [MEDIUM_AND_SMALL_SCREEN]: {
@@ -28,30 +27,32 @@ export const styles = {
     width: '25%',
     display: 'flex',
     justifyContent: 'flex-end',
+    alignItems: 'center',
     [MEDIUM_AND_SMALL_SCREEN]: { width: '100%' },
   },
   inputStyles: {
     flex: 1,
-    width: '300px',
+    // width: '300px',
     padding: '1px',
     height: '55px',
     backgroundColor: 'white',
     border: (theme) => `1px solid ${theme.palette.primary.main}`,
     borderRadius: '16px',
     '& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button': {
-      '-webkit-appearance': 'none',
+      WebkitAppearance: 'none',
       margin: 0,
     },
     '& input[type=number]': {
-      '-moz-appearance': 'textfield',
+      MozAppearance: 'textfield',
     },
+    '&:hover': {},
     [MEDIUM_AND_SMALL_SCREEN]: {
       width: '100%',
       minWidth: '100%',
     },
   },
   inputComponentStyle: {
-    '-moz-appearance': 'textfield',
+    MozAppearance: 'textfield',
   },
   subContainer: { display: 'flex', alignItems: 'center', gap: 4 },
   sliderThumb: {
@@ -94,4 +95,8 @@ export const getInputAdornmentStyles = (
   fontFamily: 'DM Sans',
   paddingLeft: type === 'money' || type === 'number' ? '10px' : '0px',
   paddingRight: type === 'money' || type === 'number' ? '0px' : '10px',
+});
+
+export const getErrorStyles = (error: boolean) => ({
+  border: error ? '1px solid red' : `1px solid ${PRIMARY_BLUE}`,
 });

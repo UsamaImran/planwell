@@ -8,12 +8,14 @@ import { commonStyles } from '../styles';
 
 function FinalStep() {
   const {
-    formValues: { kidsStep },
+    formValues: { kidsStep, goals },
   } = useFormContext();
+
+  const renderHomeBuyingGoals = goals.includes('HOME');
   return (
-    <Container header='Set Your Goals' sx={commonStyles.wrapperContainer}>
+    <Container sx={commonStyles.wrapperContainer}>
       <RetirementGoals />
-      <HomeBuyingGoals />
+      {renderHomeBuyingGoals && <HomeBuyingGoals />}
       {!!kidsStep.length && <CollegeGoals />}
     </Container>
   );

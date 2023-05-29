@@ -22,7 +22,7 @@ function PersonalInfo() {
         <Box sx={inputContainer}>
           <Box>
             <Typography sx={inputLabels} variant='h5'>
-              Parent Name*
+              Name*
             </Typography>
           </Box>
           <Box>
@@ -32,7 +32,7 @@ function PersonalInfo() {
         <Box sx={inputContainer}>
           <Box>
             <Typography sx={inputLabels} variant='h5'>
-              Parent Email*
+              Email*
             </Typography>
           </Box>
           <Box>
@@ -41,7 +41,7 @@ function PersonalInfo() {
         </Box>
       </Box>
       <Box sx={buttonContainer}>
-        <Button sx={button}>Send Email</Button>
+        <Button sx={button}>Email PDF</Button>
       </Box>
       <Box sx={{ textAlign: 'center', marginTop: 5 }}>
         <Typography sx={link} variant='subtitle1'>

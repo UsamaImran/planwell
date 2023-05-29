@@ -38,8 +38,7 @@ function IncomeStep() {
       >
         <InputSlider
           value={incomeValue}
-          max={2000000}
-          step={50}
+          max={2_000_000}
           name='incomeStep.incomeValue'
           label='Annual Gross Income *'
           onChangeValue={(value) => handleValuesChange('incomeValue', +value)}

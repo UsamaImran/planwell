@@ -48,6 +48,7 @@ export const styles = {
 
   additionalInfo: {
     marginTop: 'auto',
+    marginX: '0 !important',
   },
 
   tooltipAndHeaderContainer: {

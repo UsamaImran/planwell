@@ -6,13 +6,13 @@ import {
   Typography,
 } from '@mui/material';
 import { styles } from './styles';
-import { getMinValue, getSliderLabel } from '@/utils/utils';
+import { getMinValue, getSliderLabel, getStepsRange } from '@/utils/utils';
 import { TEXT_GRAY } from '@/styles/colors';
 
 const { subContainer, sliderThumb } = styles;
 
 export type ISlider = SliderProps & {
-  inputType?: 'percent' | 'money';
+  inputType?: 'percent' | 'money' | 'age';
 };
 
 function Slider({ inputType = 'money', max, min, ...props }: ISlider) {
@@ -23,13 +23,14 @@ function Slider({ inputType = 'money', max, min, ...props }: ISlider) {
       </Typography>
       <MuiSlider
         {...props}
+        step={props.step || getStepsRange((props.value as number) || 1)}
         valueLabelFormat={
           props.valueLabelDisplay == 'auto'
             ? props.valueLabelFormat
             : (value) => getSliderLabel(value, inputType)
         }
         aria-labelledby='input-slider'
-        valueLabelDisplay='on'
+        valueLabelDisplay='auto'
         sx={sliderThumb}
         max={max}
         min={min}

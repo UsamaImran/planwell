@@ -1,8 +1,9 @@
 import Container from '@/components/container/Container';
-import { PRIMARY_RED } from '@/styles/colors';
+import { PRIMARY_GREEN, PRIMARY_RED } from '@/styles/colors';
 import { Box, Typography } from '@mui/material';
 import { styles } from './styles';
 import Image from 'next/image';
+import { useFormContext } from '@/context/form/formContext';
 
 const {
   resultsContainer,
@@ -13,6 +14,12 @@ const {
 } = styles;
 
 const FinancialInformation = () => {
+  const { result } = useFormContext();
+
+  const retirementInfo = result?.goal_summary?.retirement_summary;
+
+  const isStatusOkay = retirementInfo?.retirement_status === 'On Track';
+  const status = retirementInfo?.retirement_status;
   return (
     <Container
       sx={{
@@ -34,7 +41,9 @@ const FinancialInformation = () => {
             <Typography variant='h5' sx={sectionTitle}>
               Your Target Age for Retirement
             </Typography>
-            <Typography sx={sectionDetail}>65</Typography>
+            <Typography sx={sectionDetail}>
+              {retirementInfo?.your_target_retirement_age}
+            </Typography>{' '}
           </Box>
         </Box>
         <Box sx={childContainer}>
@@ -42,18 +51,25 @@ const FinancialInformation = () => {
             <Typography variant='h5' sx={sectionTitle}>
               Earliest Age You Can Retire
             </Typography>
-            <Typography sx={sectionDetail}>68</Typography>
+            <Typography sx={sectionDetail}>
+              {retirementInfo?.earliest_retirement_age}
+            </Typography>{' '}
           </Box>
         </Box>
         <Box sx={{ ...childContainer, borderRight: '0px' }}>
           <Box sx={childSection}>
             <Typography variant='h5' sx={sectionTitle}>
-              Earliest Age You Can Retire
+              Status
             </Typography>
             <Typography
-              sx={{ ...sectionDetail, color: PRIMARY_RED, fontSize: '20px' }}
+              sx={{
+                ...sectionDetail,
+                color: isStatusOkay ? PRIMARY_GREEN : PRIMARY_RED,
+                fontSize: '20px',
+                textAlign: 'center',
+              }}
             >
-              Additional Savings Needed
+              {status}
             </Typography>
           </Box>
         </Box>

@@ -18,29 +18,33 @@ function KidsDetailStep() {
   } = useFormContext();
 
   const handleValueChange = (val: number) => {
-    onFormValuesChange(
-      'kidsStep',
-      [...Array(val)].fill({ age: 18, alreadySaved: 0, monthlyContribution: 0 })
-    );
+    if (val > 0) {
+      onFormValuesChange(
+        'kidsStep',
+        [...Array(val)].fill({
+          age: 0,
+          alreadySaved: 0,
+          monthlyContribution: 0,
+        })
+      );
 
-    const option = CHILD_COLLEGE_OPTIONS[0];
+      const option = CHILD_COLLEGE_OPTIONS[0];
 
-    onFormValuesChange('finalStep', {
-      ...finalStep,
-      kidsGoals: {
-        goals: [...Array(val)].fill({
-          goalType: 'COLLEGE',
-          fundingPercentage: 0,
-          customValue: 0,
-          collegeOptions: {
-            title: option.title,
-            type: option.type,
-            value: option.value,
-          },
-        }),
-        assumptions: finalStep.kidsGoals.assumptions,
-      },
-    });
+      onFormValuesChange('finalStep', {
+        ...finalStep,
+        kidsGoals: {
+          goals: [...Array(val)].fill({
+            goalType: 'COLLEGE',
+            fundingPercentage: 100,
+            customValue: 0,
+            collegeOptions: option.value,
+          }),
+          assumptions: finalStep.kidsGoals.assumptions,
+        },
+      });
+    } else {
+      onFormValuesChange('kidsStep', []);
+    }
   };
 
   return (
@@ -74,7 +78,7 @@ const ChildDetails = ({ currentIndex }: { currentIndex: number }) => {
     onFormValuesChange,
   } = useFormContext();
 
-  const handleValuesChange = <T extends keyof typeof kidsStep[0]>(
+  const handleValuesChange = <T extends keyof (typeof kidsStep)[0]>(
     key: T,
     value: number | number[]
   ) => {
@@ -95,19 +99,22 @@ const ChildDetails = ({ currentIndex }: { currentIndex: number }) => {
     >
       <InputSlider
         label='Age of Child'
-        min={18}
-        max={100}
+        min={0}
+        max={18}
         step={1}
         type='age'
+        inputType={'age'}
         value={kidsStep[currentIndex]?.age || 0}
         onChangeValue={(val) => handleValuesChange('age', +val)}
       />
       <InputSlider
         label={`How much have you already saved for Child ${currentKid} college?`}
         value={kidsStep[currentIndex]?.alreadySaved || 0}
+        max={500_000}
         onChangeValue={(val) => handleValuesChange('alreadySaved', +val)}
       />
       <InputSlider
+        max={5000}
         label='How much do you contribute every month?'
         value={kidsStep[currentIndex]?.monthlyContribution || 0}
         onChangeValue={(val) => handleValuesChange('monthlyContribution', +val)}

@@ -13,7 +13,6 @@ export const styles = {
     borderTopLeftRadius: 20,
     color: 'white',
     fontWeight: 500,
-    marginBottom: '40px',
   },
   containerStyles: { padding: '0px !important' },
 } satisfies IStyles;

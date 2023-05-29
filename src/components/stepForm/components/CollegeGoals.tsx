@@ -7,7 +7,10 @@ import {
 } from '@/constants/constants';
 import { useFormContext } from '@/context/form/formContext';
 import { BACKGROUND_PURPLE } from '@/styles/colors';
-import { addCommasToNumber } from '@/utils/utils';
+import {
+  addCommasToNumber,
+  convertCommaStringBackToNumber,
+} from '@/utils/utils';
 import { Box, Radio, Typography } from '@mui/material';
 import React from 'react';
 import Accordion from '../../accordion/Accordion';
@@ -56,17 +59,19 @@ const CollegeGoalItem = ({ index }: { index: number }) => {
   const currentGoal = kidsGoals.goals[index];
   const goalType = currentGoal.goalType;
 
-  const handleValueChange = <T extends keyof typeof kidsGoals.goals[0]>(
+  const handleValueChange = <T extends keyof (typeof kidsGoals.goals)[0]>(
     key: T,
     value: any
   ) => {
     const final = [...kidsGoals.goals];
+
     final[index] = { ...currentGoal, [key]: value };
+
     onFormValuesChange('finalStep', {
       ...finalStep,
       kidsGoals: {
+        ...kidsGoals,
         goals: [...final],
-        assumptions: { ...kidsGoals.assumptions },
       },
     });
   };
@@ -79,17 +84,9 @@ const CollegeGoalItem = ({ index }: { index: number }) => {
         size='small'
         label=''
         onSelectOption={(value) => {
-          const currentValue = CHILD_COLLEGE_OPTIONS.find(
-            (item) => item.value === value
-          )?.value as number;
-
-          handleValueChange('collegeOptions', currentValue);
+          handleValueChange('collegeOptions', value);
         }}
-        value={
-          CHILD_COLLEGE_OPTIONS.find(
-            (item) => item.value === currentGoal.collegeOptions.value
-          )?.value as number
-        }
+        value={currentGoal.collegeOptions}
         options={CHILD_COLLEGE_OPTIONS.map(({ title, id, value }) => ({
           id,
           label: (
@@ -107,7 +104,7 @@ const CollegeGoalItem = ({ index }: { index: number }) => {
   };
 
   return (
-    <Box sx={container}>
+    <Box sx={{ ...container }}>
       <Box>
         <Typography sx={childItem} variant='h6'>
           Child {currentKid}
@@ -115,7 +112,7 @@ const CollegeGoalItem = ({ index }: { index: number }) => {
       </Box>
       <Box sx={childContainer}>
         <Box sx={{ display: 'flex' }}>
-          {CHILD_GOALS_RADIO_OPTIONS.map((item, index) => (
+          {CHILD_GOALS_RADIO_OPTIONS.map((item) => (
             <Box sx={radioContainer} key={item.id}>
               <Radio
                 checked={currentGoal.goalType === (item.value as any)}
@@ -132,10 +129,15 @@ const CollegeGoalItem = ({ index }: { index: number }) => {
           ) : (
             <Input
               sx={{ width: '250px' }}
-              type='number'
-              onChange={(e) =>
-                handleValueChange('customValue', +e.target.value)
-              }
+              value={currentGoal.customValue.toLocaleString() || ''}
+              onChange={(e) => {
+                const value = e.target.value;
+
+                handleValueChange(
+                  'customValue',
+                  convertCommaStringBackToNumber(value) || 0
+                );
+              }}
             />
           )}
         </Box>
@@ -146,12 +148,15 @@ const CollegeGoalItem = ({ index }: { index: number }) => {
         </Box>
         <Box sx={{ paddingTop: '20px' }}>
           <Input
+            value={currentGoal.fundingPercentage}
             sx={{ width: '250px' }}
             type='number'
             inputType='percent'
             onChange={(e) =>
-              handleValueChange('fundingPercentage', +e.target.value)
+              handleValueChange('fundingPercentage', +e.target.value || '')
             }
+            error={!currentGoal.fundingPercentage}
+            errorMessage={'required'}
           />
         </Box>
       </Box>
@@ -218,36 +223,21 @@ const AdditionalInfoTooltip = () => {
       </Box>
       <Box>
         <Typography sx={tooltipHeading}>
-          Rate of return before retirement:
+          Net annual return of college savings:
         </Typography>
         <Typography sx={tooltipSubHeading}>
-          This is the annual rate of return you expect from your retirement
-          savings and investments
+          This is the annual rate of return for college savings plan that you
+          may have invested in, such as 529s. You can edit this as needed or use
+          the defaults we have provided.
         </Typography>
       </Box>
       <Box>
         <Typography sx={tooltipHeading}>
-          Rate of Return During Retirement
+          Annual growth rate in college fees
         </Typography>
         <Typography sx={tooltipSubHeading}>
-          This is the annual rate of return you expect from your savings and
-          investments during retirement. This is more conservative than before
-          retirement.
-        </Typography>
-      </Box>
-      <Box>
-        <Typography sx={tooltipHeading}>Inflation</Typography>
-        <Typography sx={tooltipSubHeading}>
-          This is what you expect for the average long-term inflation rate. A
-          common measure of inflation in the U.S. is the Consumer Price Index
-          (CPI). From 1925 through 2016 the CPI has a long-term average of 2.9%
-          annually.
-        </Typography>
-      </Box>
-      <Box>
-        <Typography sx={tooltipHeading}>Wage Growth</Typography>
-        <Typography sx={tooltipSubHeading}>
-          Annual growth in wages and salaries.
+          This is the annual growth rate in college fees. You can edit this as
+          needed or use the defaults we have provided.
         </Typography>
       </Box>
     </Box>

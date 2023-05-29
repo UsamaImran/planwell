@@ -17,4 +17,9 @@ export const styles = {
     height: '100%',
     gap: 3,
   },
+  text: {
+    [MEDIUM_AND_SMALL_SCREEN]: {
+      fontSize: '25px',
+    },
+  },
 } satisfies IStyles;

@@ -1,3 +1,4 @@
+import { END_POINT } from '@/constants/constants';
 import { createContext, useContext } from 'react';
 import {
   deepMapToSnakeCase,
@@ -37,7 +38,7 @@ export default class Api {
 
   getUrl(path: string) {
     //need to add the base path here
-    return `${path}`;
+    return `${END_POINT}${path}`;
   }
 
   getQueryParams(queryParams: Record<string, unknown>) {
@@ -74,9 +75,10 @@ export default class Api {
     path: string,
     data?: TBody,
     queryParams: Record<string, unknown> = {},
-    whitelistKeys: false | string[] = []
+    whitelistKeys: false | string[] = false
   ) {
     const params = this.getQueryParams(queryParams);
+
     return this.request<TResult, TBody>(
       'POST',
       `${path}?${params}`,
@@ -131,7 +133,6 @@ export default class Api {
     whitelistKeys?: false | string[]
   ): Promise<TResult | null> {
     const url = this.getUrl(path);
-
     const init: RequestInit = {
       method,
       credentials: 'same-origin',

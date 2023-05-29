@@ -29,5 +29,10 @@ export const styles = {
     alignItems: 'center',
     marginY: '40px',
   },
-  tableSectionTitle: { display: 'flex', alignItems: 'center', gap: 3 },
+  tableSectionTitle: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 3,
+    marginY: 5,
+  },
 } satisfies IStyles;

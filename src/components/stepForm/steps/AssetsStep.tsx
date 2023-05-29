@@ -32,7 +32,7 @@ function AssetsStep() {
         backgroundColor={BACKGROUND_SKIN}
       >
         <InputSlider
-          max={5000000}
+          max={50_000_000}
           step={50}
           label='Retirement Balance'
           value={retirementBalanceValue}
@@ -41,7 +41,7 @@ function AssetsStep() {
           }
         />
         <InputSlider
-          max={5000000}
+          max={50_000_000}
           step={50}
           label='Investment Balance'
           value={investmentBalanceValue}
@@ -50,7 +50,7 @@ function AssetsStep() {
           }
         />
         <InputSlider
-          max={5000000}
+          max={50_000_000}
           step={50}
           label='Cash'
           value={cashValue}

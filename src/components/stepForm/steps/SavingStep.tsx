@@ -31,21 +31,21 @@ function SavingStep() {
         backgroundColor={BACKGROUND_YELLOW}
       >
         <InputSlider
-          max={2000000}
+          max={60_000}
           step={50}
           label='401K'
           value={KValue}
           onChangeValue={(value) => handleValuesChange('KValue', +value)}
         />
         <InputSlider
-          max={2000000}
+          max={60_000}
           step={50}
           label='IRA'
           value={IRAValue}
           onChangeValue={(value) => handleValuesChange('IRAValue', +value)}
         />
         <InputSlider
-          max={2000000}
+          max={60_000}
           step={50}
           label='Roth IRA'
           value={rothIraValue}

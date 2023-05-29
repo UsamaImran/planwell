@@ -33,7 +33,7 @@ function HomeBuyingInformation() {
             <Typography variant='h5' sx={sectionTitle}>
               Your Target Home Value
             </Typography>
-            <Typography sx={sectionDetail}>$1,200,000</Typography>
+            <Typography sx={sectionDetail}>$1,000,000</Typography>
           </Box>
         </Box>
         <Box sx={childContainer}>
@@ -42,13 +42,7 @@ function HomeBuyingInformation() {
               <Typography variant='h5' sx={sectionTitle}>
                 Downpayment Needed
               </Typography>
-              <Typography sx={sectionDetail}>
-                $240,000
-                {/* <br /> 20% of Home Value */}
-                {/* <Typography variant='subtitle2' color='black'>
-                 
-                </Typography> */}
-              </Typography>
+              <Typography sx={sectionDetail}>$200,000</Typography>
             </>
           </Box>
         </Box>
